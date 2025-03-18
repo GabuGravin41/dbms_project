@@ -1,0 +1,186 @@
+<!-- templates/dashboard.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Head Section - Metadata and Styles -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KIS Theater Management</title>
+    
+    <!-- External Resources -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.0.0-beta.83/dist/themes/light.css">
+</head>
+<body class="bg-slate-50">
+    <!-- Main Container -->
+    <div class="max-w-7xl mx-auto px-4 py-8">
+        <!-- Header Section -->
+        <div class="mb-8">
+            <h1 class="text-3xl font-bold text-slate-800">Call Desk Theater Management</h1>
+            <p class="text-slate-600">Welcome, Receptionist</p>
+        </div>
+
+        <!-- Theater Status Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+            {% for theater in theaters %}
+            <div class="bg-white p-4 rounded-lg shadow-sm border-l-4 
+                {% if theater.status == 'Available' %}border-green-500
+                {% elif theater.status == 'In Use' %}border-red-500
+                {% elif theater.status == 'Maintenance' %}border-yellow-500
+                {% else %}border-gray-500{% endif %}">
+                
+                <div class="flex justify-between items-start">
+                    <div>
+                        <h3 class="font-bold text-lg text-slate-800">Theater {{ theater.theater_no }}</h3>
+                        <span class="text-sm 
+                            {% if theater.status == 'Available' %}text-green-600
+                            {% elif theater.status == 'In Use' %}text-red-600
+                            {% elif theater.status == 'Maintenance' %}text-yellow-600
+                            {% else %}text-gray-600{% endif %}">
+                            {{ theater.status }}
+                        </span>
+                    </div>
+
+                    <!-- Status Update Form -->
+                    <form method="POST" class="text-sm" action="/">
+                        <input type="hidden" name="theater_id" value="{{ theater.id }}">
+                        <select name="new_status" onchange="this.form.submit()" 
+                                class="px-2 py-1 rounded border border-slate-300 text-sm">
+                            <option value="Available" {% if theater.status == 'Available' %}selected{% endif %}>Available</option>
+                            <option value="In Use" {% if theater.status == 'In Use' %}selected{% endif %}>In Use</option>
+                            <option value="Maintenance" {% if theater.status == 'Maintenance' %}selected{% endif %}>Maintenance</option>
+                            <option value="Closed" {% if theater.status == 'Closed' %}selected{% endif %}>Closed Down</option>
+                        </select>
+                        <input type="hidden" name="update_status">
+                    </form>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Monthly Statistics Section -->
+        <div class="bg-white p-6 rounded-lg shadow-sm mb-8">
+            <h2 class="text-xl font-semibold mb-4 text-slate-800">Monthly Theater Usage</h2>
+            <div class="grid grid-cols-2 gap-4 text-center">
+                <div class="bg-blue-50 p-4 rounded-lg">
+                    <div class="text-2xl font-bold text-blue-600">{{ monthly_stats.bookings_count }}</div>
+                    <div class="text-sm text-blue-800">Total Bookings</div>
+                </div>
+                <div class="bg-green-50 p-4 rounded-lg">
+                    <div class="text-2xl font-bold text-green-600">{{ monthly_stats.actual_usage }}</div>
+                    <div class="text-sm text-green-800">Actual Usage</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Booking Form Section -->
+        <div class="bg-white p-6 rounded-lg shadow-sm mb-8">
+            <h2 class="text-xl font-semibold mb-4 text-slate-800">New Theater Booking</h2>
+            <form method="POST" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <!-- Doctor Selection -->
+                <div class="space-y-2">
+                    <label class="block text-sm font-medium text-slate-700">Select Doctor</label>
+                    <select name="doctor_id" class="w-full p-2 border rounded-md" required>
+                        {% for doctor in doctors %}
+                        <option value="{{ doctor.id }}">Dr. {{ doctor.name }} ({{ doctor.contract_no }}) - {{ doctor.specialty }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <!-- Patient Selection -->
+                <div class="space-y-2">
+                    <label class="block text-sm font-medium text-slate-700">Select Patient</label>
+                    <select name="patient_id" class="w-full p-2 border rounded-md" required>
+                        {% for patient in patients %}
+                        <option value="{{ patient.id }}">{{ patient.display_file_no }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <!-- Theater Selection -->
+                <div class="space-y-2">
+                    <label class="block text-sm font-medium text-slate-700">Select Theater</label>
+                    <select name="theater_id" class="w-full p-2 border rounded-md" required>
+                        {% for theater in theaters %}
+                        <option value="{{ theater.id }}" {% if theater.status != 'Available' %}disabled{% endif %}>
+                            Theater {{ theater.theater_no }} - {{ theater.status }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <!-- Date/Time Picker -->
+                <div class="space-y-2">
+                    <label class="block text-sm font-medium text-slate-700">Date & Time</label>
+                    <input type="datetime-local" name="booking_time" 
+                           class="w-full p-2 border rounded-md" required>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" name="create_booking" 
+                        class="md:col-span-2 bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700 transition">
+                    Book Theater
+                </button>
+            </form>
+        </div>
+
+        <!-- Bookings List Section -->
+        <div class="bg-white p-6 rounded-lg shadow-sm">
+            <h2 class="text-xl font-semibold mb-4 text-slate-800">Scheduled Bookings</h2>
+            <div class="divide-y divide-slate-200">
+                {% for booking in bookings %}
+                <div class="py-3 flex items-center justify-between {% if booking.status == 'Cancelled' %}bg-red-50{% endif %}">
+                    <div class="flex-1">
+                        <div class="font-medium text-slate-800">
+                            Theater {{ booking.theater.theater_no }} - 
+                            {{ booking.booking_time.strftime('%d %b %Y %I:%M %p') }}
+                            {% if booking.actual_used %}
+                                <span class="text-green-600 ml-2">✓ Completed</span>
+                            {% elif booking.status == 'Cancelled' %}
+                                <span class="text-red-600 ml-2">✗ Cancelled</span>
+                            {% endif %}
+                        </div>
+                        <div class="text-sm text-slate-600">
+                            Dr. {{ booking.doctor.name }} ({{ booking.doctor.contract_no }})
+                            ➔ 
+                            {{ booking.patient.name }} ({{ booking.patient.file_no }})
+                        </div>
+                    </div>
+
+                    {% if not booking.actual_used and booking.status != 'Cancelled' %}
+                    <div class="flex space-x-2">
+                        <form method="POST">
+                            <input type="hidden" name="booking_id" value="{{ booking.id }}">
+                            <button type="submit" name="update_booking" value="complete"
+                                    class="px-3 py-1 bg-green-100 text-green-800 rounded hover:bg-green-200 text-sm">
+                                Mark Completed
+                            </button>
+                            <button type="submit" name="update_booking" value="cancel"
+                                    class="px-3 py-1 bg-red-100 text-red-800 rounded hover:bg-red-200 text-sm">
+                                Cancel
+                            </button>
+                        </form>
+                    </div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Flash Messages Section -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="mt-6">
+                    {% for category, message in messages %}
+                    <div class="p-3 rounded-md 
+                        {% if category == 'success' %}bg-green-100 text-green-800
+                        {% else %}bg-red-100 text-red-800{% endif %}">
+                        {{ message }}
+                    </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+    </div>
+</body>
+</html>
