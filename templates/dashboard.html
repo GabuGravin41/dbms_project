@@ -11,13 +11,39 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.0.0-beta.83/dist/themes/light.css">
 </head>
-<body class="bg-slate-50">
+<body class="flex bg-slate-50">
+
+    <!-- Sidebar -->
+    <nav class="w-64 bg-gray-800 text-white p-4">
+        <h2 class="text-lg font-bold mb-4">Dashboard</h2>
+        <ul>
+            <li class="mb-2">
+                <a href="{{ url_for('list_doctors') }}" class="hover:underline">Doctors</a>
+            </li>
+            <li>
+                <a href="{{ url_for('list_patients') }}" class="hover:underline">Patients</a>
+            </li>
+        </ul>
+    </nav>
+
     <!-- Main Container -->
     <div class="max-w-7xl mx-auto px-4 py-8">
         <!-- Header Section -->
         <div class="mb-8">
             <h1 class="text-3xl font-bold text-slate-800">Call Desk Theater Management</h1>
             <p class="text-slate-600">Welcome, Receptionist</p>
+        </div>
+
+        <!-- Combined Theatre Schedule Button -->
+        <div class="mb-6 flex justify-end">
+            <a href="{{ url_for('theatre_schedule') }}" 
+            class="bg-blue-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-600 transition
+                    flex items-center gap-2 w-fit">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M8 3v4m8-4v4m-9-2h10a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2zm3 7h4m-6 4h4m-6 4h4"/>
+                </svg>
+                View Theatre Schedule
+            </a>
         </div>
 
         <!-- Theater Status Grid -->
@@ -67,7 +93,7 @@
                     <div class="text-sm text-blue-800">Total Bookings</div>
                 </div>
                 <div class="bg-green-50 p-4 rounded-lg">
-                    <div class="text-2xl font-bold text-green-600">{{ monthly_stats.actual_usage }}</div>
+                    <div class="text-2xl font-bold text-green-600">5</div> <!-- {{ monthly_stats.actual_usage }} -->
                     <div class="text-sm text-green-800">Actual Usage</div>
                 </div>
             </div>

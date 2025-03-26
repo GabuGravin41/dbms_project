@@ -90,6 +90,7 @@ def dashboard():
         if action == "complete":
             cursor.execute("UPDATE booking SET status = 'Completed' WHERE booking_id = %s", (booking_id,))
             flash("Booking marked as completed!", "success")
+
         elif action == "cancel":
             cursor.execute("UPDATE booking SET status = 'Cancelled' WHERE booking_id = %s", (booking_id,))
             flash("Booking has been cancelled!", "error")
@@ -133,6 +134,53 @@ def dashboard():
 
     return render_template("dashboard.html", theaters=theaters, doctors=doctors,
                            patients=patients, bookings=bookings, monthly_stats=monthly_stats)
+
+
+@app.route("/theatre-schedule")
+def theatre_schedule():
+    days_of_week = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"] 
+    cursor.execute("SELECT doctor.contract_no, start_time FROM booking INNER JOIN doctor ON booking.doctor_contract_no = doctor.contract_no ORDER BY start_time") 
+    schedule = [{"doctor": row[0], "start_time": row[1]} for row in cursor.fetchall()] 
+    return render_template("theatre_schedule.html", days_of_week=days_of_week, schedule=schedule)
+
+
+# 🩺 Doctors List Route
+@app.route("/doctors")
+def list_doctors():
+    cursor.execute("SELECT contract_no, speciality FROM doctor")
+    doctors = [{"id": row[0], "contract_no": row[0], "specialty": row[1]} for row in cursor.fetchall()]
+    return render_template("doctors.html", doctors=doctors)
+
+# 🧑‍⚕️ Doctor Profile Route
+@app.route("/doctor-profile")
+def doctor_profile():
+    doctor_id = request.args.get('id')
+    cursor.execute("SELECT contract_no, speciality FROM doctor WHERE contract_no = %s", (doctor_id,))
+    doctor = cursor.fetchone()
+    if doctor:
+        return render_template("doctor-profile.html", doctor={"contract_no": doctor[0], "specialization": doctor[1]})
+    else:
+        flash("Doctor not found!", "error")
+        return redirect(url_for("list_doctors"))
+
+# 🧑‍⚕️ Patients List Route
+@app.route("/patients")
+def list_patients():
+    cursor.execute("SELECT file_no, display_file_no FROM patient")
+    patients = [{"id": row[0], "display_file_no": row[1]} for row in cursor.fetchall()]
+    return render_template("patients.html", patients=patients)
+
+# 🧑‍⚕️ Patient Profile Route
+@app.route("/patient-profile")
+def patient_profile():
+    patient_id = request.args.get('id')
+    cursor.execute("SELECT file_no, display_file_no FROM patient WHERE file_no = %s", (patient_id,))
+    patient = cursor.fetchone()
+    if patient:
+        return render_template("patient-profile.html", patient={"file_no": patient[0], "display_file_no": patient[1]})
+    else:
+        flash("Patient not found!", "error")
+        return redirect(url_for("list_patients"))
 
 if __name__ == "__main__":
     app.run(debug=True)

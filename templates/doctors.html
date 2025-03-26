@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doctors List</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+</head>
+<body class="bg-slate-50 p-8">
+    <div class="max-w-7xl mx-auto">
+        <h2 class="text-3xl font-bold mb-6 text-slate-800">Doctors List</h2>
+        <ul class="space-y-4">
+            {% for doctor in doctors %}
+                <li>
+                    <a href="/doctor-profile?id={{ doctor.contract_no }}" class="block p-4 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200 ease-in-out text-blue-500 hover:bg-blue-50">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <h3 class="text-lg font-semibold">{{ doctor.contract_no }}</h3>
+                                <p class="text-sm text-slate-600">{{ doctor.specialty }}</p>
+                            </div>
+                            <sl-icon name="arrow-right" class="text-slate-400"></sl-icon>
+                        </div>
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+</body>
+</html>

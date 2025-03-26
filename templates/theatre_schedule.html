@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Theater Schedule Grid</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.0.0-beta.83/dist/themes/light.css">
+    <style> 
+        .time-slot {
+            border-left: 3px solid;
+            border-color: inherit;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            cursor: pointer; /* Change cursor to indicate interactivity */
+            height: 40px; /* Increased height for more space */
+            padding: 10px; /* Added padding for better spacing */
+            display: flex; /* Use flexbox for alignment */
+            align-items: center; /* Center text vertically */
+            justify-content: center; /* Center text horizontally */
+            text-align: center; /* Center text */
+            word-wrap: break-word; /* Allow text to wrap */
+            position: relative; /* Required for z-index */
+            z-index: 1; /* Default z-index */
+        }
+        
+        .time-slot:hover {
+            transform: scale(1.06); /* Slightly enlarge the time slot */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add a shadow for depth */
+            z-index: 10; /* Bring to foreground on hover */
+        }
+        
+        .time-slot:active {
+            transform: scale(0.95); /* Slightly shrink when clicked */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Reduce shadow when clicked */
+        }
+        .theater-cell {
+            transition: transform 0.2s ease; /* Smooth transition for scaling */
+        }
+        
+        .theater-cell:hover {
+            transform: scale(1.03); /* Slightly enlarge the entire cell */
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); /* Add a shadow for depth */
+        }
+        
+        .stripes {
+            background-image: repeating-linear-gradient(-45deg,
+                transparent,
+                transparent 5px,
+                rgba(0,0,0,0.1) 5px,
+                rgba(0,0,0,0.1) 10px
+            );
+        }
+    </style>
+</head>
+<body class="bg-slate-50 p-8">
+    <div class="max-w-7xl mx-auto">
+
+        <div class="mb-8 flex justify-between items-center">
+            <div>
+                <h2 class="text-2xl font-bold text-slate-800">Theatre Schedule</h2>
+                <p class="text-slate-600 mt-2">Weekly overview of theatre availability and bookings</p>
+            </div>
+            <button onclick="window.history.back()" class="bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-700 transition duration-200">
+                Back
+            </button>
+        </div>
+        
+
+        <!-- Legend -->
+        <div class="mb-8 flex gap-4">
+            <div class="flex items-center gap-2">
+                <div class="w-4 h-4 bg-green-100"></div>
+                <span class="text-sm">Available</span>
+            </div>
+            <div class="flex items-center gap-2">
+                <div class="w-4 h-4 bg-red-100"></div>
+                <span class="text-sm">In Use</span>
+            </div>
+            <div class="flex items-center gap-2">
+                <div class="w-4 h-4 bg-yellow-100 stripes"></div>
+                <span class="text-sm">Maintenance</span>
+            </div>
+            <div class="flex items-center gap-2">
+                <div class="w-4 h-4 bg-slate-100"></div>
+                <span class="text-sm">Closed</span>
+            </div>
+        </div>
+
+        <!-- Schedule Grid -->
+        <div id="schedule-grid" class=" overflow-x-auto mt-16">
+            <div class="min-w-[1200px]">
+                <!-- Days Header -->
+                <div class="grid grid-cols-8 gap-px bg-slate-200 mb-1">
+                    <div class="bg-white h-12"></div>
+                    <div class="bg-white p-2 text-center font-medium">
+                        Monday<br>
+                        <span class="text-sm text-slate-600">2025-03-24</span>
+                    </div>
+                    <div class="bg-white p-2 text-center font-medium">Tuesday<br><span class="text-sm text-slate-600">2025-03-25</span></div>
+                    <div class="bg-white p-2 text-center font-medium">Wednesday<br><span class="text-sm text-slate-600">2025-03-26</span></div>
+                    <div class="bg-white p-2 text-center font-medium">Thursday<br><span class="text-sm text-slate-600">2025-03-27</span></div>
+                    <div class="bg-white p-2 text-center font-medium">Friday<br><span class="text-sm text-slate-600">2025-03-28</span></div>
+                    <div class="bg-white p-2 text-center font-medium">Saturday<br><span class="text-sm text-slate-600">2025-03-29</span></div>
+                    <div class="bg-white p-2 text-center font-medium">Sunday<br><span class="text-sm text-slate-600">2025-03-30</span></div>
+                </div>
+
+                <!-- Theater Rows -->
+                <!-- Theater 1 -->
+                <div class="grid grid-cols-8 gap-px bg-slate-200 mb-1">
+                    <div class="bg-white p-2 flex items-center justify-center">Theater 1</div>
+                    
+                    <!-- Monday -->
+                    <div class="bg-white relative h-32 theater-cell">
+                        <div class="absolute left-0 right-0 top-[5%] h-[20%]" 
+                             style="background-color: rgba(254,202,202,0.3)">
+                            <div class="time-slot bg-red-100 h-full p-1 text-xs">
+                                08:00-10:00<br>Cardiac Surgery
+                            </div>
+                        </div>
+                        <div class="absolute left-0 right-0 top-[30%] h-[20%]">
+                            <div class="time-slot bg-red-100 h-full p-1 text-xs">
+                                10:30-12:30<br>Orthopedic Surgery
+                            </div>
+                        </div>
+                        <div class="absolute left-0 right-0 top-[60%] h-[20%]">
+                            <div class="time-slot bg-green-100 h-full p-1 text-xs">
+                                13:00-15:00<br>Available
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tuesday -->
+                    <div class="bg-white relative h-32 theater-cell">
+                        <div class="absolute left-0 right-0 top-[10%] h-[30%] stripes" 
+                             style="background-color: rgba(254,240,138,0.3)">
+                            <div class="time-slot bg-yellow-100 h-full p-1 text-xs">
+                                09:00-12:00<br>Maintenance
+                            </div>
+                        </div>
+                        <div class="absolute left-0 right-0 top-[50%] h-[20%]">
+                            <div class="time-slot bg-red-100 h-full p-1 text-xs">
+                                13:00-15:00<br>General Surgery
+                            </div>
+                        </div>
+                        <div class="absolute left-0 right-0 top-[75%] h-[15%]">
+                            <div class="time-slot bg-green-100 h-full p-1 text-xs">
+                                15:30-16:30<br>Available
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Wednesday -->
+                    <div class="bg-white relative h-32 theater-cell">
+                        <div class="absolute left-0 right-0 top-[5%] h-[20%]" 
+                             style="background-color: rgba(254,202,202,0.3)">
+                            <div class="time-slot bg-red-100 h-full p-1 text-xs">
+                                08:00-10:00<br>Pediatric Surgery
+                            </div>
+                        </div>
+                        <div class="absolute left-0 right-0 top-[30%] h-[20%]">
+                            <div class="time-slot bg-red-100 h-full p-1 text-xs">
+                                10:30-12:30<br>Cardiac Surgery
+                            </div>
+                        </div>
+                        <div class="absolute left-0 right-0 top-[60%] h-[20%]">
+                            <div class="time-slot bg-green-100 h-full p-1 text-xs">
+                                13:00-15:00<br>Available
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Thursday -->
+                    <div class="bg-white relative h-32 theater-cell">
+                        <div class="absolute left-0 right-0 top-[10%] h-[20%]" 
+                             style="background-color: rgba(254,202,202,0.3)">
+                            <div class="time-slot bg-red-100 h-full p-1 text-xs">
+                                08:00-10:00<br>Neurosurgery
+                            </div>
+                        </div>
+                        <div class="absolute left-0 right-0 top-[30%] h-[20%]">
+                            <div class="time-slot bg-red-100 h-full p-1 text-xs">
+                                10:30-12:30<br>General Surgery
+                            </div>
+                        </div>
+                        <div class="absolute left-0 right-0 top-[60%] h-[20%]">
+                            <div class="time-slot bg-green-100 h-full p-1 text-xs">
+                                13:00-15:00<br>Available
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Friday -->
+                    <div class="bg-white relative h-32 theater-cell">
+                        <div class="absolute left-0 right-0 top-[10%] h-[20%]" 
+                             style="background-color: rgba(254,202,202,0.3)">
+                            <div class="time-slot bg-red-100 h-full p-1 text-xs">
+                                08:00-10:00<br>Cardiac Surgery
+                            </div>
+                        </div>
+                        <div class="absolute left-0 right-0 top-[30%] h-[20%]">
+                            <div class="time-slot bg-red-100 h-full p-1 text-xs">
+                                10:30-12:30<br>Orthopedic Surgery
+                            </div>
+                        </div>
+                        <div class="absolute left-0 right-0 top-[60%] h-[20%]">
+                            <div class="time-slot bg-green-100 h-full p-1 text-xs">
+                                13:00-15:00<br>Available
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Saturday -->
+                    <div class="bg-white relative h-32 theater-cell">
+                        <div class="absolute left-0 right-0 top-[10%] h-[20%]" 
+                             style="background-color: rgba(254,202,202,0.3)">
+                            <div class="time-slot bg-red-100 h-full p-1 text-xs">
+                                08:00-10:00<br>Cardiac Surgery
+                            </div>
+                        </div>
+                        <div class="absolute left-0 right-0 top-[30%] h-[20%]">
+                            <div class="time-slot bg-red-100 h-full p-1 text-xs">
+                                10:30-12:30<br>Orthopedic Surgery
+                            </div>
+                        </div>
+                        <div class="absolute left-0 right-0 top-[60%] h-[20%]">
+                            <div class="time-slot bg-green-100 h-full p-1 text-xs">
+                                13:00-15:00<br>Available
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sunday -->
+                    <div class="bg-white relative h-32 theater-cell">
+                        <div class="absolute left-0 right-0 top-[10%] h-[20%]" 
+                             style="background-color: rgba(254,202,202,0.3)">
+                            <div class="time-slot bg-red-100 h-full p-1 text-xs">
+                                08:00-10:00<br>Cardiac Surgery
+                            </div>
+                        </div>
+                        <div class="absolute left-0 right-0 top-[30%] h-[20%]">
+                            <div class="time-slot bg-red-100 h-full p-1 text-xs">
+                                10:30-12:30<br>Orthopedic Surgery
+                            </div>
+                        </div>
+                        <div class="absolute left-0 right-0 top-[60%] h-[20%]">
+                            <div class="time-slot bg-green-100 h-full p-1 text-xs">
+                                13:00-15:00<br>Available
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Theater 2 -->
+                <div class="grid grid-cols-8 gap-px bg-slate-200 mb-1">
+                    <div class="bg-white p-2 flex items-center justify-center">Theater 2</div>
+
+                    <!-- Monday -->
+                    <div class="bg-white relative h-32 theater-cell">
+                        <div class="absolute left-0 right-0 top-[10%] h-[20%]" 
+                             style="background-color: rgba(254,202,202,0.3)">
+                            <div class="time-slot bg-red-100 h-full p-1 text-xs">
+                                09:00-11:00<br>General Surgery
+                            </div>
+                        </div>
+                        <div class="absolute left-0 right-0 top-[40%] h-[20%]">
+                            <div class="time-slot bg-green-100 h-full p-1 text-xs">
+                                11:30-12:30<br>Available
+                            </div>
+                        </div>
+                        <div class="absolute left-0 right-0 top-[70%] h-[20%]">
+                            <div class="time-slot bg-red-100 h-full p-1 text-xs">
+                                13:00-15:00<br>Eye Surgery
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tuesday -->
+                    <div class="bg-white relative h-32 theater-cell">
+                        <div class="absolute left-0 right-0 top-[10%] h-[20%]" 
+                             style="background-color: rgba(254,202,202,0.3)">
+                            <div class="time-slot bg-red-100 h-full p-1 text-xs">
+                                09:00-11:00<br>Cardiac Surgery
+                            </div>
+                        </div>
+                        <div class="absolute left-0 right-0 top-[40%] h-[20%]">
+                            <div class="time-slot bg-green-100 h-full p-1 text-xs">
+                                11:30-12:30<br>Available
+                            </div>
+                        </div>
+                        <div class="absolute left-0 right-0 top-[70%] h-[20%]">
+                            <div class="time-slot bg-red-100 h-full p-1 text-xs">
+                                13:00-15:00<br>Orthopedic Surgery
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Wednesday -->
+                    <div class="bg-white relative h-32 theater-cell">
+                        <div class="absolute left-0 right-0 top-[10%] h-[20%]" 
+                             style="background-color: rgba(254,202,202,0.3)">
+                            <div class="time-slot bg-red-100 h-full p-1 text-xs">
+                                09:00-11:00<br>Pediatric Surgery
+                            </div>
+                        </div>
+                        <div class="absolute left-0 right-0 top-[40%] h-[20%]">
+                            <div class="time-slot bg-green-100 h-full p-1 text-xs">
+                                11:30-12:30<br>Available
+                            </div>
+                        </div>
+                        <div class="absolute left-0 right-0 top-[70%] h-[20%]">
+                            <div class="time-slot bg-red-100 h-full p-1 text-xs">
+                                13:00-15:00<br>Neurosurgery
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Thursday -->
+                    <div class="bg-white relative h-32 theater-cell">
+                        <div class="absolute left-0 right-0 top-[10%] h-[20%]" 
+                             style="background-color: rgba(254,202,202,0.3)">
+                            <div class="time-slot bg-red-100 h-full p-1 text-xs">
+                                09:00-11:00<br>General Surgery
+                            </div>
+                        </div>
+                        <div class="absolute left-0 right-0 top-[40%] h-[20%]">
+                            <div class="time-slot bg-green-100 h-full p-1 text-xs">
+                                11:30-12:30<br>Available
+                            </div>
+                        </div>
+                        <div class="absolute left-0 right-0 top-[70%] h-[20%]">
+                            <div class="time-slot bg-red-100 h-full p-1 text-xs">
+                                13:00-15:00<br>Eye Surgery
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Friday -->
+                    <div class="bg-white relative h-32 theater-cell">
+                        <div class="absolute left-0 right-0 top-[10%] h-[20%]" 
+                             style="background-color: rgba(254,202,202,0.3)">
+                            <div class="time-slot bg-red-100 h-full p-1 text-xs">
+                                09:00-11:00<br>Cardiac Surgery
+                            </div>
+                        </div>
+                        <div class="absolute left-0 right-0 top-[40%] h-[20%]">
+                            <div class="time-slot bg-green-100 h-full p-1 text-xs">
+                                11:30-12:30<br>Available
+                            </div>
+                        </div>
+                        <div class="absolute left-0 right-0 top-[70%] h-[20%]">
+                            <div class="time-slot bg-red-100 h-full p-1 text-xs">
+                                13:00-15:00<br>Orthopedic Surgery
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Saturday -->
+                    <div class="bg-white relative h-32 theater-cell">
+                        <div class="absolute left-0 right-0 top-[10%] h-[20%]" 
+                             style="background-color: rgba(254,202,202,0.3)">
+                            <div class="time-slot bg-red-100 h-full p-1 text-xs">
+                                09:00-11:00<br>Cardiac Surgery
+                            </div>
+                        </div>
+                        <div class="absolute left-0 right-0 top-[40%] h-[20%]">
+                            <div class="time-slot bg-green-100 h-full p-1 text-xs">
+                                11:30-12:30<br>Available
+                            </div>
+                        </div>
+                        <div class="absolute left-0 right-0 top-[70%] h-[20%]">
+                            <div class="time-slot bg-red-100 h-full p-1 text-xs">
+                                13:00-15:00<br>Orthopedic Surgery
+                            </div>
+                        </div>
+                    </div>
+
+                <!-- Continue with Theaters 3-5 -->
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.0.0-beta.83/dist/shoelace.js"></script>
+</body>
+</html>

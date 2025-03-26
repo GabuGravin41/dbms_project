@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doctor Profile - KIS Theater</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.0.0-beta.83/dist/themes/light.css">
+</head>
+<body class="bg-slate-50">
+    <div class="max-w-7xl mx-auto px-4 py-8">
+        <!-- Profile Header -->
+        <div class="flex items-center justify-between mb-8">
+            <div>
+                <h1 class="text-3xl font-bold text-slate-800">Doctor Profile</h1>
+                <a href="{{url_for ('dashboard') }}" class="text-blue-600 hover:underline">← Back to Dashboard</a>
+            </div>
+            <div class="flex items-center space-x-4">
+                <sl-button variant="primary">Update Availability</sl-button>
+            </div>
+        </div>
+
+        <!-- Main Content Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <!-- Left Column - Professional Info -->
+            <div class="space-y-6">
+                <div class="bg-white p-6 rounded-lg shadow-sm">
+                    <div class="flex items-center space-x-4">
+                        <div class="h-20 w-20 rounded-full bg-slate-100 flex items-center justify-center">
+                            <img src="https://via.placeholder.com/80" alt="Doctor's Photo" class="h-20 w-20 rounded-full object-cover">
+                        </div>
+                        <div>
+                            <h2 class="text-xl font-semibold">{{ doctor.contract_no }}</h2>
+                            <p class="text-slate-600">{{ doctor.specialization }}</p>
+                        </div>
+                    </div>
+                    <dl class="mt-4 space-y-2">
+                        <div>
+                            <dt class="text-sm text-slate-500">Contract Number</dt>
+                            <dd class="font-medium">{{ doctor.contract_no }}</dd>
+                        </div>
+                        <div>
+                            <dt class="text-sm text-slate-500">Department</dt>
+                            <dd class="font-medium">Cardiovascular Surgery</dd>
+                        </div>
+                        <div>
+                            <dt class="text-sm text-slate-500">Contact</dt>
+                            <dd class="font-medium">ejohnson@kis.hospital<br>+1 555 234 5678</dd>
+                        </div>
+                    </dl>
+                </div>
+
+                <!-- Qualifications -->
+                <div class="bg-white p-6 rounded-lg shadow-sm">
+                    <h3 class="text-lg font-semibold mb-4">Credentials</h3>
+                    <div class="space-y-2">
+                        <div class="flex items-center">
+                            <sl-icon name="award" class="text-slate-400 mr-2"></sl-icon>
+                            <span>MD, Harvard Medical School</span>
+                        </div>
+                        <div class="flex items-center">
+                            <sl-icon name="building" class="text-slate-400 mr-2"></sl-icon>
+                            <span>Board Certified - ABTS</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column - Schedule -->
+            <div class="md:col-span-2 space-y-6">
+                <!-- Weekly Schedule -->
+                <div class="bg-white p-6 rounded-lg shadow-sm">
+                    <h3 class="text-lg font-semibold mb-4">Weekly Availability</h3>
+                    <div class="grid grid-cols-7 gap-2 text-sm">
+                        <div class="p-2 text-center font-medium">Mon</div>
+                        <div class="p-2 text-center font-medium">Tue</div>
+                        <div class="p-2 text-center font-medium">Wed</div>
+                        <div class="p-2 text-center font-medium">Thu</div>
+                        <div class="p-2 text-center font-medium">Fri</div>
+                        <div class="p-2 text-center font-medium">Sat</div>
+                        <div class="p-2 text-center font-medium">Sun</div>
+                        
+                        <div class="col-span-7 h-32 bg-slate-50 rounded-lg p-4">
+                            <div class="flex items-center h-full justify-center text-slate-400">
+                                Operating Theater Schedule
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Current Assignments -->
+                <div class="bg-white p-6 rounded-lg shadow-sm">
+                    <h3 class="text-lg font-semibold mb-4">Current Theater Assignments</h3>
+                    <div class="divide-y divide-slate-200">
+                        <div class="py-3">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="font-medium">Theater 1 - CABG Procedure</p>
+                                    <p class="text-sm text-slate-600">Patient: John Doe | 24 Mar 2025 08:00 AM</p>
+                                </div>
+                                <sl-badge variant="success" pill>In Progress</sl-badge>
+                            </div>
+                        </div>
+                        <div class="py-3">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="font-medium">Theater 3 - Valve Replacement</p>
+                                    <p class="text-sm text-slate-600">Patient: Sarah Smith | 25 Mar 2025 10:30 AM</p>
+                                </div>
+                                <sl-badge variant="neutral" pill>Scheduled</sl-badge>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
